@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     bool inAir = false;
     public float rotationSpeed = 10;
     GameManager gameManager;
+    public GameObject checkpointGameObject;
 
 
     // Start is called before the first frame update
@@ -21,14 +22,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
            //Jump Logic
            if (!inAir)
            {
             rigidbody2D.AddForceAtPosition(Vector2.up * jumpForce, transform.position); 
-    
+            inAir = true;
            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            //place a flag down
+            GameObject g = Instantiate(checkpointGameObject, gameManager.levelGroup.transform);
+            g.transform.localPosition = this.transform.position - gameManager.levelGroup.transform.position;
+
+            Vector3 checkpointData = new Vector3(gameManager.levelGroup.transform.position.x, this.transform.position.y, 0);
+            gameManager.UpdateCheckpoint(checkpointData);
         }
 
         if (inAir)
